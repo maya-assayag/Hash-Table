@@ -1,0 +1,17 @@
+{
+  "name": "hashtable",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest --watchAll --verbose --coverage --maxWorkers=1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^27.5.1",
+    "nodemon": "^2.0.15"
+  }
+}
