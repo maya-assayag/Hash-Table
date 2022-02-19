@@ -40,9 +40,12 @@ class HashTable {
     }
     const index = hashStringToInt(key, this.table.length);
     if (this.table[index]) {
-      this.table[index] = [
-        Array.from(new Set([key, value], ...this.table[index]))
-      ];
+      for (let item of this.table[index]) {
+        if (item[0] === key && item[1] === value) {
+          return;
+        }
+      }
+      this.table[index] = [[key, value], ...this.table[index]];
     } else {
       this.table[index] = [[key, value]];
     }

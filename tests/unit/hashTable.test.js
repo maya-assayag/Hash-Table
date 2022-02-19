@@ -33,7 +33,7 @@ describe("Add item function", () => {
     expect(res.length).toBe(1);
   });
 
-  it("should solve collision by resize the table", () => {
+  it("should avoid collisions by resize the table when it get over 80% in size", () => {
     const tableSize = 2;
     hashTable = new HashTable(tableSize);
     hashTable.setItem(key, value);
@@ -43,5 +43,20 @@ describe("Add item function", () => {
     hashTable.setItem(key, value);
 
     expect(hashTable.table.length).toBe(tableSize * 2);
+  });
+
+  it("should solve collisions by chaning the items", () => {
+    const tableSize = 2;
+    hashTable = new HashTable(tableSize);
+
+    hashTable.setItem(key, value);
+    key = "yek";
+    hashTable.setItem(key, value);
+    key = "kye";
+    hashTable.setItem(key, value);
+
+    const index = hashStringToInt(key, hashTable.table.length);
+
+    expect(hashTable.table[index].length).toBe(3);
   });
 });
