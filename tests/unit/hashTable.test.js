@@ -1,6 +1,6 @@
 const { HashTable } = require("../../hashTable");
 const { hashStringToInt } = require("../../hashTable");
-describe("Add item function", () => {
+describe("hash table class", () => {
   let hashTable;
   let key;
   let value;
@@ -17,15 +17,61 @@ describe("Add item function", () => {
 
   it("sanity test", () => {
     hashTable.setItem(key, value);
+
     const res = hashTable.getItem(key);
 
-    expect(res).toBe(value);
+    expect(res[0]).toBe(value);
   });
 
-  it("should not set identical item more than once", () => {
+  it("should return all items with same key", () => {
     hashTable.setItem(key, value);
+
+    value = "Value1";
     hashTable.setItem(key, value);
+
+    const res = hashTable.getItem(key);
+
+    expect(res.length).toBe(2);
+  });
+
+  it("should remove item when call removeItem function", () => {
+    hashTable.setItem(key, value);
+    hashTable.removeItem(key);
+
     const index = hashStringToInt(key, hashTable.table.length);
+    const res = hashTable.table[index].find(
+      item => item[0] === key && item[1] === value
+    );
+
+    expect(res).toBe(undefined);
+  });
+
+  it("should return indecative message when try remove does not exsit item", () => {
+    const res = hashTable.removeItem(key);
+
+    expect(res).toBe("This item was not found");
+  });
+
+  it("should return indecative message when try get does not exsit item", () => {
+    const res = hashTable.getItem(key);
+
+    expect(res).toBe("This item was not found");
+  });
+
+  it("should return indecative message when try get does not exsit item but in this key index has item", () => {
+    hashTable.setItem(key, value);
+    key = "eyk";
+    const res = hashTable.getItem(key);
+
+    expect(res).toBe("This item was not found");
+  });
+
+  it("should not set identical item,same key and value, more than once", () => {
+    hashTable.setItem(key, value);
+    hashTable.setItem(key, value);
+
+    const index = hashStringToInt(key, hashTable.table.length);
+
     let res = hashTable.table[index].filter(
       pair => pair[0] === key && pair[1] === value
     );
@@ -33,9 +79,30 @@ describe("Add item function", () => {
     expect(res.length).toBe(1);
   });
 
+  it("should return indicative message when set identical item,same key and value, more than once", () => {
+    hashTable.setItem(key, value);
+    const res = hashTable.setItem(key, value);
+
+    expect(res).toBe("This item is already indexed");
+  });
+
+  it("should set items with same key and different value, more than once", () => {
+    hashTable.setItem(key, value);
+
+    value = "Value2";
+    hashTable.setItem(key, value);
+
+    const index = hashStringToInt(key, hashTable.table.length);
+
+    let res = hashTable.table[index].filter(pair => pair[0] === key);
+
+    expect(res.length).toBe(2);
+  });
+
   it("should avoid collisions by resize the table when it get over 80% in size", () => {
     const tableSize = 2;
     hashTable = new HashTable(tableSize);
+
     hashTable.setItem(key, value);
     key = "key2";
     hashTable.setItem(key, value);
@@ -43,6 +110,23 @@ describe("Add item function", () => {
     hashTable.setItem(key, value);
 
     expect(hashTable.table.length).toBe(tableSize * 2);
+  });
+
+  it("should copy items from previous table to resize table when table resize after get over 80% in size", () => {
+    const tableSize = 2;
+    hashTable = new HashTable(tableSize);
+    hashTable.setItem(key, value);
+
+    const secondKey = "key2";
+    hashTable.setItem(secondKey, value);
+
+    previousTableItemIndex = hashStringToInt(key, hashTable.table.length);
+    const res = hashTable.table[previousTableItemIndex].find(
+      item => item[0] === key && item[1] === value
+    );
+
+    expect(res[0]).toBe(key);
+    expect(res[1]).toBe(value);
   });
 
   it("should solve collisions by chaning the items", () => {

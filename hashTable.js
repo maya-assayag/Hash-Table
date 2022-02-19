@@ -42,7 +42,7 @@ class HashTable {
     if (this.table[index]) {
       for (let item of this.table[index]) {
         if (item[0] === key && item[1] === value) {
-          return;
+          return "This item is already indexed";
         }
       }
       this.table[index] = [[key, value], ...this.table[index]];
@@ -55,10 +55,15 @@ class HashTable {
     const index = hashStringToInt(key, this.table.length);
 
     if (!this.table[index]) {
-      return null;
+      return "This item was not found";
+    }
+    const res = this.table[index].filter(item => item[0] === key); //O(n)
+
+    if (!res || res.length === 0) {
+      return "This item was not found";
     }
 
-    return this.table[index].find(item => item[0] === key)[1]; //O(n)
+    return res.map(item => item[1]);
   };
 
   removeItem = key => {
@@ -68,7 +73,7 @@ class HashTable {
       return "This item was not found";
     }
 
-    return this.table[index].filter(item => item[0] !== key)[1]; //O(n)
+    this.table[index] = [...this.table[index].filter(item => item[0] !== key)]; //O(n)
   };
 }
 
