@@ -40,7 +40,19 @@ describe("hash table class", () => {
 
     const index = hashStringToInt(key, hashTable.table.length);
     const res = hashTable.table[index].find(
-      item => item[0] === key && item[1] === value
+      item => item.key === key && item.value === value
+    );
+
+    expect(res).toBe(undefined);
+  });
+
+  it("should remove item when call removeItem function with key and value", () => {
+    hashTable.setItem(key, value);
+    hashTable.removeItem(key, value);
+
+    const index = hashStringToInt(key, hashTable.table.length);
+    const res = hashTable.table[index].find(
+      item => item.key === key && item.value === value
     );
 
     expect(res).toBe(undefined);
@@ -73,7 +85,7 @@ describe("hash table class", () => {
     const index = hashStringToInt(key, hashTable.table.length);
 
     let res = hashTable.table[index].filter(
-      pair => pair[0] === key && pair[1] === value
+      pair => pair.key === key && pair.value === value
     );
 
     expect(res.length).toBe(1);
@@ -86,6 +98,28 @@ describe("hash table class", () => {
     expect(res).toBe("This item is already indexed");
   });
 
+  it("should return indicative message when trying to index a non number key", () => {
+    key = { type: "notNymber" };
+    const res = hashTable.setItem(key, value);
+
+    expect(res).toBe("This typeof key should be String or Number.");
+  });
+
+  it("should return indicative message when trying to get a non number key", () => {
+    key = { type: "notNymber" };
+    const res = hashTable.getItem(key);
+
+    expect(res).toBe("This typeof key should be String or Number.");
+  });
+
+  it("should a typeof number key", () => {
+    key = 1;
+    hashTable.setItem(key, value);
+    const res = hashTable.getItem(key);
+
+    expect(res[0]).toBe(value);
+  });
+
   it("should set items with same key and different value, more than once", () => {
     hashTable.setItem(key, value);
 
@@ -94,7 +128,7 @@ describe("hash table class", () => {
 
     const index = hashStringToInt(key, hashTable.table.length);
 
-    let res = hashTable.table[index].filter(pair => pair[0] === key);
+    let res = hashTable.table[index].filter(pair => pair.key === key);
 
     expect(res.length).toBe(2);
   });
@@ -122,11 +156,11 @@ describe("hash table class", () => {
 
     previousTableItemIndex = hashStringToInt(key, hashTable.table.length);
     const res = hashTable.table[previousTableItemIndex].find(
-      item => item[0] === key && item[1] === value
+      item => item.key === key && item.value === value
     );
 
-    expect(res[0]).toBe(key);
-    expect(res[1]).toBe(value);
+    expect(res.key).toBe(key);
+    expect(res.value).toBe(value);
   });
 
   it("should solve collisions by chaning the items", () => {
