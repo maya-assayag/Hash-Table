@@ -84,18 +84,14 @@ class HashTable {
     return res.map(item => item.value);
   };
 
-  removeItem = (key, value) => {
+  removeItem = key => {
     const index = hashStringToInt(key, this.table.length);
 
     if (!this.table[index]) {
       return "This item was not found";
     }
 
-    this.table[index] = [
-      ...this.table[index].filter(item =>
-        value ? item.key !== key && item.value !== value : item.key !== key
-      )
-    ];
+    this.table[index] = [...this.table[index].filter(item => item.key !== key)];
   };
 }
 

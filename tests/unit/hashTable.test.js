@@ -46,18 +46,6 @@ describe("hash table class", () => {
     expect(res).toBe(undefined);
   });
 
-  it("should remove item when call removeItem function with key and value", () => {
-    hashTable.setItem(key, value);
-    hashTable.removeItem(key, value);
-
-    const index = hashStringToInt(key, hashTable.table.length);
-    const res = hashTable.table[index].find(
-      item => item.key === key && item.value === value
-    );
-
-    expect(res).toBe(undefined);
-  });
-
   it("should return indecative message when try remove does not exsit item", () => {
     const res = hashTable.removeItem(key);
 
